@@ -151,7 +151,7 @@ int main()
 
 
 	// 문제 아래 time 들었는 초 값에 분과 시간 일수를 구해라
-	unsigned int sec = 987654321;//초
+	unsigned int total_sec = 987654321;//초
 
 	unsigned int day = 0, hour = 0, min = 0, sec = 0;
 	day = 0;
