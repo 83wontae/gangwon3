@@ -154,11 +154,11 @@ int main()
 	unsigned int total_sec = 987654321;//초
 
 	unsigned int day = 0, hour = 0, min = 0, sec = 0;
-	day = 0;
-	hour = 0;
-	min = 0;
-	sec = 0;
-
+	sec = total_sec % 60;//0~59
+	min = (total_sec / 60) % 60;//0~59
+	hour = ((total_sec / 60) / 60) % 24;
+	day = (((total_sec / 60) / 60) / 24);
+	
 	printf("%d", i2);
 	system("pause");
 }
