@@ -86,6 +86,33 @@ int SumToN(int Num)
 	return FacResult;
 }
 
+
+int AAA()
+{
+	while (1)
+	{
+		printf("1st While! Start\n");
+		break;
+		printf("1st While! End\n");
+	}
+
+	while (1)
+	{
+		printf("2nd While! Start\n");
+		return 0;
+		printf("2nd While! End\n");
+	}
+
+	while (1)
+	{
+		printf("3rd While! Start\n");
+		break;
+		printf("3rd While! End\n");
+	}
+
+	return 0;
+}
+
 void CallFunction();
 
 int main()
@@ -146,13 +173,70 @@ int main()
 	// 5 Factorial 구해라
 	// 5 * 4 * 3 * 2 * 1 = 15; 
 
-	printf("Factorial FacResult = %d\n", Factorial(5));
-	printf("Factorial2 FacResult = %d\n", Factorial2(5));
-	printf("ReFactorial FacResult = %d\n", ReFactorial(5));
-	printf("SumToN Result = %d\n", SumToN(10));
+	//printf("Factorial FacResult = %d\n", Factorial(5));
+	//printf("Factorial2 FacResult = %d\n", Factorial2(5));
+	//printf("ReFactorial FacResult = %d\n", ReFactorial(5));
+	//printf("SumToN Result = %d\n", SumToN(10));
 
 	//1~n까지 합 구하는 함수
 	//int SumToN(int Num)
+
+	//int nResult = 1;
+	//int i = 1;
+
+	//while (true)
+	//{
+	//	printf("i=%d\n", i);
+	//	i++;
+	//	printf("break 실행전\n");
+	//	break;//이 명령어를 만나면 while 즉시 종료한다. 아래 코드 실행안됨
+	//	printf("break 실행후\n");
+	//}
+
+	// while 문
+	// 조건식이 true면 아래 가로 안에 코드를 실행한다.
+	// 조건식이 false면 while문을 종료하고 다음 코드 실행
+	//while (i <= 10/*조건식*/)
+	//{// <-반복 처리할 코드 시작
+	//	nResult *= i;
+	//	i++;
+	//}// <-반복 처리할 코드 종료
+	//printf("while Factorial = %d", nResult);
+
+	//0~Num 짝수만 더하기
+	//int i = 0, Num = 10;
+	//int nResult = 0;
+	//while (i <= Num)
+	//{
+	//	i++;
+	//	if (i % 2 != 0)
+	//	{
+	//		continue;// 다음 코드를 실행하지 않고 while 코드를 개속 실행
+	//	}
+	// 
+	//	nResult += i;
+	//}
+	//printf("0~Num EvenSum=%d", nResult);
+	
+	// 위에 코드 for문으로 만드시오
+	int Num = 10;
+	int nResult = 0;
+	for (int i = 0; i <= Num; ++i)
+	{
+		/*
+		if (i % 2 != 0)
+			continue;// 다음 코드를 실행하지 않고 while 코드를 개속 실행
+		*/
+
+		if (i % 2 != 0)
+		{
+			continue;// 다음 코드를 실행하지 않고 while 코드를 개속 실행
+		}
+		 
+		nResult += i;
+	}
+	printf("0~Num EvenSum=%d\n", nResult);
+	AAA();
 }
 
 void CallFunction()
