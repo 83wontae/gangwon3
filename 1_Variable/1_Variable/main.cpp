@@ -147,8 +147,10 @@ int main()
 	bResult = (10 > 11);
 	bResult = (10 < 11);
 
+	// 삼항연산자
+	// (10 == 11)?
+	// 위에 결과 값이 참이면 100, 거짓이면 50을 nResult에 대입한다.
 	int nResult = (10 == 11) ? 100 : 50;
-
 
 	// 문제 아래 time 들었는 초 값에 분과 시간 일수를 구해라
 	unsigned int total_sec = 987654321;//초
