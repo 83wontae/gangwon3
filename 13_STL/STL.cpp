@@ -1,5 +1,15 @@
 #include <stdio.h>
 #include <vector>
+#include <list>
+
+struct stMonster
+{
+	int index = 0;//몬스터 타입
+};
+
+bool IsFindMonIndex(const stMonster& mon) {
+	return mon.index == 3;// 만약 mon.index가 3이면 true반환, 아니면 false반환
+}
 
 class CShop
 {
@@ -62,50 +72,153 @@ int main()
 	//	printf("vecint=%d\n", value);
 	//}
 
-	std::vector<int> vecInt{ 0,1,2,3,4,5,6,7,8,9 };
-	std::vector<int>::iterator vecIter = vecInt.begin();
-	// vecIter++;// 오른쪽으로 다음 배열에 위치를 가리키겠다.
-	vecIter += 2;// 오른쪽으로 2번 이동한 배열에 위치를 가리키겠다.
-	vecIter--;
-	// vecInt.end();// 배열 끝이라는 의미(마지막 배열은 아니다)
-	vecInt.push_back(100);// 배열에 마지막에 100 요소를 추가하겠다
-	for (std::vector<int>::iterator iter = vecInt.begin(); iter != vecInt.end(); ++iter)
-	{
-		printf("iter=%d\n", *iter);
-	}
+	//std::vector<int> vecInt{ 0,1,2,3,4,5,6,7,8,9 };
+	//std::vector<int>::iterator vecIter = vecInt.begin();
+	//// vecIter++;// 오른쪽으로 다음 배열에 위치를 가리키겠다.
+	//vecIter += 2;// 오른쪽으로 2번 이동한 배열에 위치를 가리키겠다.
+	//vecIter--;
+	//// vecInt.end();// 배열 끝이라는 의미(마지막 배열은 아니다)
+	//vecInt.push_back(100);// 배열에 마지막에 100 요소를 추가하겠다
+	//for (std::vector<int>::iterator iter = vecInt.begin(); iter != vecInt.end(); ++iter)
+	//{
+	//	printf("iter=%d\n", *iter);
+	//}
 
-	vecInt.pop_back();// 마지막 배열에 요소를 제거하겠다.
-	vecIter = vecInt.begin();
-	while (vecIter != vecInt.end())
-	{
-		printf("while iter=%d\n", *vecIter);
-		vecIter++;
-	}
-	printf("vecInt size=%d\n", int(vecInt.size()));
+	//vecInt.pop_back();// 마지막 배열에 요소를 제거하겠다.
+	//vecIter = vecInt.begin();
+	//while (vecIter != vecInt.end())
+	//{
+	//	printf("while iter=%d\n", *vecIter);
+	//	vecIter++;
+	//}
+	//printf("vecInt size=%d\n", int(vecInt.size()));
 
-	vecIter = vecInt.begin();
-	while (vecIter != vecInt.end())
-	{
-		if (*vecIter == 5)
-		{
-			vecIter = vecInt.erase(vecIter);//vecIter가 가리키고 있는 배열 요소 제거하겠다.
-		}
-		else
-		{
-			vecIter++;
-		}
-	}
+	//vecIter = vecInt.begin();
+	//while (vecIter != vecInt.end())
+	//{
+	//	if (*vecIter == 5)
+	//	{
+	//		vecIter = vecInt.erase(vecIter);//vecIter가 가리키고 있는 배열 요소 제거하겠다.
+	//	}
+	//	else
+	//	{
+	//		vecIter++;
+	//	}
+	//}
 
-	vecIter = vecInt.begin();
-	while (vecIter != vecInt.end())
-	{
-		printf("while iter=%d\n", *vecIter);
-		vecIter++;
-	}
+	//vecIter = vecInt.begin();
+	//while (vecIter != vecInt.end())
+	//{
+	//	printf("while iter=%d\n", *vecIter);
+	//	vecIter++;
+	//}
 	 
 
 	/*
 	* 리스트(list)
+	* 리스트는 요소들을 양방향 연결리스트의 형태로 관리한다.(Doubly linked List)
+	* 리스트 객체는 앵커라 불리는 포인터 2개를 제공하는데 이는 head와 tail을 가리킨다.
+	* 새로운 요소를 삽입하기 위해서는 이 포인터(앵커)를 조작한다.
+	* 리스트는 임의 접근([])을 제공하지 않는다. (n번째 요소에 접근하기 위해서 노드들을 거쳐야 하기 때문)
+	* 특정 위치에 추가/삭제가 자유롭다. (특정 위치를 찾는 시간은 제외)
+	* 재할당 연산이 없다. 연속적인 메모리가 아니기 때문에(메모리가 제공되는 한) 무한히 추가할수 있다.
 	* 
+	* 장점
+	* - 임의의 위치에 요소를 추가하는 것이 자유롭다(특정 위치를 찾는 시간은 제외) 따라서 쓰기에 매우 강하다
+	* 
+	* 단점
+	* - 임의접근이 불가능하기 때문에 선형 탐색하여 위치를 찾는다.
+	* - 원소간의 연결을 위해 추가적인 메모리를 소모한다(다음 노드의 포인터 메모리)
 	*/
+	
+	// std::list<int> : 리스트로 생성할 변수형
+	// listInt : 생성할 리스트에 이름
+	// { 0,1,2,3,4 }; : 리스트에 기본값
+	//std::list<int> listInt{ 0,1,2,3,4 };
+
+	//for (int value : listInt )
+	//{
+	//	value = 0;
+	//	printf("List Value=%d\n", value);
+	//}
+
+	//for (const int& value : listInt)
+	//{
+	//	printf("List Value=%d\n", value);
+	//}
+
+	//std::list<int>::iterator listIter = listInt.begin();
+	//printf("listIter=%d\n", *listIter);
+	//for (std::list<int>::iterator iter = listInt.begin(); iter != listInt.end(); ++iter)
+	//{
+	//	printf("For List Value=%d\n", *iter);
+	//}
+
+	//listIter = listInt.begin();
+	//while (listIter != listInt.end())
+	//{
+	//	printf("While List Value=%d\n", *listIter);
+	//	listIter++;
+	//}
+	
+	std::list<int> listInt{ 10,7,31,22,75 };
+	listInt.push_back(100);// 리스트에 뒤쪽에 값을 추가 연결한다.
+	listInt.push_front(200);// 리스트에 앞쪽에 값을 추가 연결한다.
+
+	listInt.pop_back();// 리스트에 뒤쪽에 값을 제거한다.
+	listInt.pop_front();// 리스트에 앞쪽 값을 제거한다.
+
+	// 리스트에서 특정 원소 찾기
+	std::list<int>::iterator it = std::find(listInt.begin(), listInt.end(), 22);
+	if (it != listInt.end())
+	{
+		// 찾았다.
+		printf("Find List Value=%d\n", *it);
+		// listInt.erase(it);// 리스트 안에 특정 요소 제거하기
+		int value = 2023;
+		// listInt.insert(it, value);// 특정 요소 앞쪽에 새로운 요소 끼워넣기
+		// listInt.emplace(it, 2024);// 특정 요소 앞쪽에 새로운 요소 끼워넣기
+	}
+	else
+	{
+		// 못 찾았다.
+		printf("Find List Fail!\n");
+	}
+
+	for (const int& value : listInt)
+	{
+		printf("List Value=%d\n", value);
+	}
+
+	// 구조체 배열 find_if로 특정 요소 찾기
+	std::list<stMonster> arrMon;
+
+	for (int i = 1; i < 6; ++i)
+	{
+		stMonster temp;
+		temp.index = i + 10;
+		arrMon.push_back(temp);
+	}
+
+	std::list<stMonster>::iterator monIter;
+	// monIter = std::find_if(arrMon.begin(), arrMon.end(), IsFindMonIndex);
+	monIter = std::find_if(arrMon.begin(), arrMon.end()
+		, [](const stMonster& mon)
+		{
+			return mon.index == 12;
+		});
+
+	if (monIter != arrMon.end())	{
+		// 찾았다
+		printf("monIter index=%d\n", monIter->index);
+	}
+	else {
+		// 못찾음
+		printf("monIter find Fail!\n");
+	}
+
+	for (const stMonster& value : arrMon)
+	{
+		printf("Monster index=%d\n", value.index);
+	}
 }
