@@ -67,20 +67,14 @@ int main()
 			printf("키를 입력해주세요 : ");
 			scanf_s("%d", &height);
 			BMI = GetBMI(weight, standardWeight(height));
-			//등급		비만도 수치
-			//10이하		정상
-			//10초과 20이하	과체중
-			//20 초과		비만
-			if (10 <= BMI)
-			{
+
+			if (10 <= BMI){
 				printf("정상\n");
 			}
-			else if (10 < BMI && BMI <= 20)
-			{
+			else if (10 < BMI && BMI <= 20){
 				printf("과체중\n");
 			}
-			else if (20 > BMI)
-			{
+			else if (20 > BMI){
 				printf("비만\n");
 			}
 		}
@@ -90,5 +84,4 @@ int main()
 			break;
 		}
 	}
-
 }
