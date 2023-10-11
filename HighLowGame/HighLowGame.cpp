@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include "Card.h"
 
 /*
 1. 52개의 카드으로 게임을 합니다.
@@ -11,55 +12,6 @@
 6. 카드를 1이 가장 낮고 K가 가장 높습니다.
 7. 문양은 스페이드 > 다이아 > 하트 > 클로버 순으로 높습니다.
 */
-
-enum CardMark
-{
-	None = 0,
-	Clover,
-	Heart,
-	Dia,
-	Spade,
-	MaxMark
-};
-
-class CCard
-{
-public:
-	CCard(CardMark mark = CardMark::None, int number = 0) :m_mark(mark), m_number(number)
-	{
-
-	}
-
-	std::string GetMarkStr()
-	{
-		switch (m_mark)
-		{
-		case Clover:
-			return "Clover";
-			break;
-		case Heart:
-			return "Heart";
-			break;
-		case Dia:
-			return "Dia";
-			break;
-		case Spade:
-			return "Spade";
-			break;
-		}
-
-		return "None";
-	}
-
-	void printCard()
-	{
-		printf("%s[%d]\n", GetMarkStr().c_str(), m_number);
-	}
-
-public:
-	CardMark m_mark;
-	int m_number;
-};
 
 int main()
 {
