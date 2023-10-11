@@ -1,5 +1,7 @@
 #include "Card.h"
 #include <stdio.h>
+#include <string>
+#include <iostream>
 
 CCard::CCard(CardMark mark, int number) :m_mark(mark), m_number(number)
 {
@@ -25,6 +27,12 @@ std::string CCard::GetMarkStr()
 	}
 
 	return "None";
+}
+
+std::string CCard::GetCardStr()
+{
+
+	return GetMarkStr() + "[" +  std::to_string(m_number) + "]";
 }
 
 void CCard::printCard()

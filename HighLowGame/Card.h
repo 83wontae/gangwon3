@@ -19,6 +19,8 @@ public:
 
 	std::string GetMarkStr();
 
+	std::string GetCardStr();
+
 	void printCard();
 
 public:
