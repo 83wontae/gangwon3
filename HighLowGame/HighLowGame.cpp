@@ -23,9 +23,6 @@ void Shuffle(std::vector<CCard>& Cards)
 	std::mt19937 mt(rd.entropy());// 시드 값도 랜덤으로 부여해서 거의 같은 결과가 나오지 않는다.
 	std::uniform_int_distribution<int> dist(0, Cards.size() - 1);
 
-	int random1;//랜덤인 숫자
-	int random2;//랜덤인 숫자
-
 	for (int i = 0; i < 100; i++)
 	{
 		int firstIndex = dist(mt);
@@ -36,6 +33,11 @@ void Shuffle(std::vector<CCard>& Cards)
 		Cards[secondIndex] = temp;
 	}
 }
+
+// 함수이름 : CompareCard
+// 파라메타 : const CCard& CardA, const CCard& CardB
+// 반환값 : bool
+// 함수기능 : CardA와 CardB를 비교하여 CardA가 크다면 true, CardB가 크면 false 반환 
 
 int main()
 {
