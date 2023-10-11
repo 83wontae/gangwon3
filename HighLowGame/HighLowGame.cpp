@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "Card.h"
+#include <random>
 
 /*
 1. 52개의 카드으로 게임을 합니다.
@@ -12,6 +13,29 @@
 6. 카드를 1이 가장 낮고 K가 가장 높습니다.
 7. 문양은 스페이드 > 다이아 > 하트 > 클로버 순으로 높습니다.
 */
+
+void Shuffle(std::vector<CCard>& Cards)
+{
+	std::random_device rd;
+	// 1234은 시드(seed)값이라고 해서 초기에 주어지는 키값
+	// 같은 시드면은 랜덤 숫자가 정하게 나온다.
+	// std::mt19937 mt(1234); 
+	std::mt19937 mt(rd.entropy());// 시드 값도 랜덤으로 부여해서 거의 같은 결과가 나오지 않는다.
+	std::uniform_int_distribution<int> dist(0, Cards.size() - 1);
+
+	int random1;//랜덤인 숫자
+	int random2;//랜덤인 숫자
+
+	for (int i = 0; i < 100; i++)
+	{
+		int firstIndex = dist(mt);
+		int secondIndex = dist(mt);
+
+		CCard temp = Cards[firstIndex];
+		Cards[firstIndex] = Cards[secondIndex];
+		Cards[secondIndex] = temp;
+	}
+}
 
 int main()
 {
@@ -28,6 +52,8 @@ int main()
 			Cards.push_back(card);
 		}
 	}
+
+	Shuffle(Cards);
 
 	for (CCard& card : Cards)
 	{
