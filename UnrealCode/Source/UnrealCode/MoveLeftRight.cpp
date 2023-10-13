@@ -4,7 +4,7 @@
 #include "MoveLeftRight.h"
 
 // Sets default values
-AMoveLeftRight::AMoveLeftRight():LocX(0), IsMoveRight(true)
+AMoveLeftRight::AMoveLeftRight():LocX(0), IsMoveRight(true), IsPlay(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -56,6 +56,8 @@ void AMoveLeftRight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);// 오버라이드한 함수인 경우 부모 함수를 실행한다. 
 
+	if (IsPlay == false)
+		return;
 
 	if (IsMoveRight)// 움직일 방향
 	{
