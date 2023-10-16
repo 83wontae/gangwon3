@@ -47,5 +47,5 @@ public:
 
 	float m_LocX;
 	bool m_IsMoveRight;
-	bool m_IsPlay;
+	bool m_0IsPlay;
 };
