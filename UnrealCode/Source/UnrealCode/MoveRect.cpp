@@ -4,7 +4,7 @@
 #include "MoveRect.h"
 
 // Sets default values
-AMoveRect::AMoveRect(): MoveType(EN_MoveTypeCode::MoveRight), fLocX(0), fLocZ(0)
+AMoveRect::AMoveRect(): m_MoveType(EN_MoveTypeCode::MoveRight), m_fLocX(0), m_fLocZ(0), m_IsPlay(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -29,27 +29,30 @@ void AMoveRect::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	switch (MoveType)
+	if (m_IsPlay == false)
+		return;
+
+	switch (m_MoveType)
 	{
 	case EN_MoveTypeCode::MoveRight:
-		fLocX += 1.0f;
-		StaticMesh->SetRelativeLocation(FVector(fLocX, 0, fLocZ));
-		if (fLocX >= 100) MoveType = EN_MoveTypeCode::MoveUp;
+		m_fLocX += 1.0f;
+		StaticMesh->SetRelativeLocation(FVector(m_fLocX, 0, m_fLocZ));
+		if (m_fLocX >= 100) m_MoveType = EN_MoveTypeCode::MoveUp;
 		break;
 	case EN_MoveTypeCode::MoveUp:
-		fLocZ += 1.0f;
-		StaticMesh->SetRelativeLocation(FVector(fLocX, 0, fLocZ));
-		if (fLocZ >= 100) MoveType = EN_MoveTypeCode::MoveLeft;
+		m_fLocZ += 1.0f;
+		StaticMesh->SetRelativeLocation(FVector(m_fLocX, 0, m_fLocZ));
+		if (m_fLocZ >= 100) m_MoveType = EN_MoveTypeCode::MoveLeft;
 		break;
 	case EN_MoveTypeCode::MoveLeft:
-		fLocX -= 1.0f;
-		StaticMesh->SetRelativeLocation(FVector(fLocX, 0, fLocZ));
-		if (fLocX <= 0) MoveType = EN_MoveTypeCode::MoveDown;
+		m_fLocX -= 1.0f;
+		StaticMesh->SetRelativeLocation(FVector(m_fLocX, 0, m_fLocZ));
+		if (m_fLocX <= 0) m_MoveType = EN_MoveTypeCode::MoveDown;
 		break;
 	case EN_MoveTypeCode::MoveDown:
-		fLocZ -= 1.0f;
-		StaticMesh->SetRelativeLocation(FVector(fLocX, 0, fLocZ));
-		if (fLocZ <= 0)	MoveType = EN_MoveTypeCode::MoveRight;
+		m_fLocZ -= 1.0f;
+		StaticMesh->SetRelativeLocation(FVector(m_fLocX, 0, m_fLocZ));
+		if (m_fLocZ <= 0)	m_MoveType = EN_MoveTypeCode::MoveRight;
 		break;
 	}
 }

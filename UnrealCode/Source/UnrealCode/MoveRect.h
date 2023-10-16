@@ -43,7 +43,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* StaticMesh;
 
-	EN_MoveTypeCode MoveType;
-	float fLocX;
-	float fLocZ;
+	EN_MoveTypeCode m_MoveType;
+	float m_fLocX;
+	float m_fLocZ;
+	bool m_IsPlay;
 };

@@ -40,6 +40,13 @@ public:
 	// TObjectPtr 언리얼에서 AMoveLeftRight를 상속 받은 모든 클래스를 가리킬수 있는 변수
 	// EditAnywhere : 인스턴스 편집가능(레벨 배치한 인스턴스에서 디테일 창으로 편집 가능하게 보여준다)
 	// class : #include 클래스를 추가하지 않고 차후에 클래스가 있을거라고 컴파일 단계에서만 알려주는 키워드
+	// TArray : 언리얼에서 배열(vector) 변수 [ 예) TArray<int> arr ]
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<class AMoveLeftRight> leftright;
+	TArray<TObjectPtr<class AMoveLeftRight>> leftright;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<TObjectPtr<class AMoveRect>> rect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<TObjectPtr<AActor>> Actors;
 };
