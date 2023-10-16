@@ -27,6 +27,9 @@ public:
 	UFUNCTION()// 바인딩 함수는 반드시 UFUNCTION으로 만들어야 됨
 	void OnSwitchBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION()
+	void OnSwitchEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* Scene;
