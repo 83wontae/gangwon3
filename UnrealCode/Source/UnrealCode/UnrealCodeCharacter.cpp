@@ -124,6 +124,14 @@ void AUnrealCodeCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AUnrealCodeCharacter::Jump()
+{
+	if (bDisableJump == true)
+		return;
+
+	Super::Jump();
+}
+
 
 
 

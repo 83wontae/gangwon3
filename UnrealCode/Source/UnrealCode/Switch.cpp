@@ -68,16 +68,19 @@ void ASwitch::OnSwitchBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	//	pActor->IsPlay = true;
 	//}
 
-	for (AActor* pActor : Actors)
-	{
-		IInterfacePlayObj* InterfaceObj = Cast<IInterfacePlayObj>(pActor);// 상속한 Interface Casting(형변환)
-		if (InterfaceObj)
-		{
-			// Interface Casting(형변환) 성공후 Execute_(function name)으로 Interface 함수 호출
-			// Execute_(function name)에 첫번째 파라메타는 함수 호출 대상 객체, 이후는 함수 파라메타
-			InterfaceObj->Execute_Code_DoPlay(pActor, true);
-		}
-	}
+	//for (AActor* pActor : Actors)
+	//{
+	//	IInterfacePlayObj* InterfaceObj = Cast<IInterfacePlayObj>(pActor);// 상속한 Interface Casting(형변환)
+	//	if (InterfaceObj)
+	//	{
+	//		// Interface Casting(형변환) 성공후 Execute_(function name)으로 Interface 함수 호출
+	//		// Execute_(function name)에 첫번째 파라메타는 함수 호출 대상 객체, 이후는 함수 파라메타
+	//		InterfaceObj->Execute_Code_DoPlay(pActor, true);
+	//	}
+	//}
+
+	if (FDele_EventOverlap.IsBound())// 바인드 걸려있는 함수가 있는지 채크
+		FDele_EventOverlap.Broadcast(true);// 델리게이트 이벤트 호출(Dispather 호출과 같다)
 }
 
 void ASwitch::OnSwitchEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -97,15 +100,18 @@ void ASwitch::OnSwitchEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	//	pActor->IsPlay = false;
 	//}
 
-	for (AActor* pActor : Actors)
-	{
-		IInterfacePlayObj* InterfaceObj = Cast<IInterfacePlayObj>(pActor);// 상속한 Interface Casting(형변환)
-		if (InterfaceObj)
-		{
-			// Interface Casting(형변환) 성공후 Execute_(function name)으로 Interface 함수 호출
-			// Execute_(function name)에 첫번째 파라메타는 함수 호출 대상 객체, 이후는 함수 파라메타
-			InterfaceObj->Execute_Code_DoPlay(pActor, false);
-		}
-	}
+	//for (AActor* pActor : Actors)
+	//{
+	//	IInterfacePlayObj* InterfaceObj = Cast<IInterfacePlayObj>(pActor);// 상속한 Interface Casting(형변환)
+	//	if (InterfaceObj)
+	//	{
+	//		// Interface Casting(형변환) 성공후 Execute_(function name)으로 Interface 함수 호출
+	//		// Execute_(function name)에 첫번째 파라메타는 함수 호출 대상 객체, 이후는 함수 파라메타
+	//		InterfaceObj->Execute_Code_DoPlay(pActor, false);
+	//	}
+	//}
+
+	if (FDele_EventOverlap.IsBound())// 바인드 걸려있는 함수가 있는지 채크
+		FDele_EventOverlap.Broadcast(false);// 델리게이트 이벤트 호출(Dispather 호출과 같다)
 }
 

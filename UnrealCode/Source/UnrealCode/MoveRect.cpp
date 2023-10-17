@@ -57,3 +57,8 @@ void AMoveRect::Tick(float DeltaTime)
 	}
 }
 
+void AMoveRect::Code_DoPlay_Implementation(bool IsPlay)
+{
+	m_IsPlay = IsPlay;
+}
+

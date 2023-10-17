@@ -6,6 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "Switch.generated.h"
 
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE : 여러게 이벤트를 바인딩 가능함, 블루프린트에서 호출 가능
+// OneParam : 파라메타 갯수 1개 이기 때문에 OneParam 사용
+// FDele_EventOverlap_OneParam : 델리게이트 이름
+// bool, IsBegin : 파라메타 변수형, 파라메타 변수 이름
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDele_EventOverlap_OneParam, bool, IsBegin);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FDele_EventOverlap_ThreeParam, bool, IsBegin, int, Number, float, fValue);
+
 UCLASS()
 class UNREALCODE_API ASwitch : public AActor
 {
@@ -49,4 +56,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TObjectPtr<AActor>> Actors;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
+	FDele_EventOverlap_OneParam FDele_EventOverlap;
 };

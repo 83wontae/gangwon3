@@ -48,7 +48,8 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
+	
+	virtual void Jump() override;
 
 protected:
 	// APawn interface
@@ -62,5 +63,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bDisableJump;
 };
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Public/Tools/InterfacePlayObj.h"
 #include "MoveRect.generated.h"
 
 UENUM(BlueprintType)// 언리얼 ENUM을 블루프린트에서도 사용가능하도록 선언 
@@ -21,7 +22,7 @@ enum class EN_MoveTypeCode : uint8
 
 
 UCLASS()
-class UNREALCODE_API AMoveRect : public AActor
+class UNREALCODE_API AMoveRect : public AActor, public IInterfacePlayObj
 {
 	GENERATED_BODY()
 	
@@ -37,6 +38,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Code_DoPlay(bool IsPlay);// 블루프린트 호출용 함수명 선언
+
+	virtual void Code_DoPlay_Implementation(bool IsPlay) override;// c++에서 실행될 함수
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* Scene;
 
