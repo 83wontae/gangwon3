@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,14 @@ AShootingGameCodeCharacter::AShootingGameCodeCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+// GetLifetimeReplicatedProps : Replicated 변수의 코드를 연결하는 영역
+void AShootingGameCodeCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AShootingGameCodeCharacter, m_LookAtRotation);
+}
+
 void AShootingGameCodeCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -66,6 +75,52 @@ void AShootingGameCodeCharacter::BeginPlay()
 	}
 }
 
+void AShootingGameCodeCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// HasAuthority()가 true면 서버, false면 클라이언트
+	if (HasAuthority() == true)
+	{
+		m_LookAtRotation = GetControlRotation();
+	}
+}
+
+void AShootingGameCodeCharacter::ReqReload_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqReload"));
+	ResReload();
+}
+
+void AShootingGameCodeCharacter::ResReload_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResReload"));
+	if (IsValid(ReloadMontage) == false)
+		return;
+
+	PlayAnimMontage(ReloadMontage);
+}
+
+void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqTestMsg"));
+	ResTestMsg();
+}
+
+void AShootingGameCodeCharacter::ResTestMsg_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsg"));
+	if (IsValid(ShootMontage) == false)
+		return;
+
+	PlayAnimMontage(ShootMontage);
+}
+
+void AShootingGameCodeCharacter::ResTestMsgToOwner_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsgToOwner"));
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -74,6 +129,10 @@ void AShootingGameCodeCharacter::SetupPlayerInputComponent(class UInputComponent
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
+		// ETriggerEvent::Started	= Press
+		// ETriggerEvent::Completed = Release
+		// ETriggerEvent::Triggered = Press Tick
+
 		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -84,6 +143,11 @@ void AShootingGameCodeCharacter::SetupPlayerInputComponent(class UInputComponent
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShootingGameCodeCharacter::Look);
 
+		//Test
+		EnhancedInputComponent->BindAction(TestAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Test);
+
+		//Reload
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Reload);
 	}
 
 }
@@ -122,6 +186,18 @@ void AShootingGameCodeCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AShootingGameCodeCharacter::Test(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Test"));
+	ReqTestMsg();
+}
+
+void AShootingGameCodeCharacter::Reload(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Reload"));
+	ReqReload();
 }
 
 

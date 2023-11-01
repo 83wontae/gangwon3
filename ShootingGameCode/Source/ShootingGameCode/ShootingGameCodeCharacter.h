@@ -37,6 +37,14 @@ class AShootingGameCodeCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	/** Test Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* TestAction;
+
+	/** Test Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ReloadAction;
+
 public:
 	AShootingGameCodeCharacter();
 	
@@ -49,6 +57,11 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 			
+	/** Called for Test input */
+	void Test(const FInputActionValue& Value);
+
+	/** Called for Test input */
+	void Reload(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
@@ -57,10 +70,49 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	virtual void Tick(float DeltaTime) override;
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+public:
+	// https://docs.unrealengine.com/4.27/ko/InteractiveExperiences/Networking/Actors/RPCs/
+	// Server : 서버에서 실행
+	// Reliable : 신뢰성
+	UFUNCTION(Server, Reliable)
+	void ReqTestMsg();
+
+	// NetMulticast : 모두에서 실행
+	UFUNCTION(NetMulticast, Reliable)
+	void ResTestMsg();
+
+	// Client : 소유중인 클라이언트에서 실행
+	UFUNCTION(Client, Reliable)
+	void ResTestMsgToOwner();
+
+	// Server : 서버에서 실행
+	// Reliable : 신뢰성
+	UFUNCTION(Server, Reliable)
+	void ReqReload();
+
+	// NetMulticast : 모두에서 실행
+	UFUNCTION(NetMulticast, Reliable)
+	void ResReload();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ShootMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ReloadMontage;
+
+	UPROPERTY(Replicated)
+	FRotator m_LookAtRotation;
+
+	UFUNCTION(BlueprintPure)
+	FRotator GetLookAtRotation() { return m_LookAtRotation; };
 };
 
