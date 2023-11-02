@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
+#include "Weapon.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,13 @@ void AShootingGameCodeCharacter::Tick(float DeltaTime)
 	}
 }
 
+void AShootingGameCodeCharacter::TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass)
+{
+	AWeapon* pWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FVector(0, 0, 0), FRotator(0, 0, 0));
+
+	pWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("weapon"));
+}
+
 void AShootingGameCodeCharacter::ReqReload_Implementation()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqReload"));
@@ -99,6 +107,21 @@ void AShootingGameCodeCharacter::ResReload_Implementation()
 		return;
 
 	PlayAnimMontage(ReloadMontage);
+}
+
+void AShootingGameCodeCharacter::ReqShoot_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqShoot"));
+	ResShoot();
+}
+
+void AShootingGameCodeCharacter::ResShoot_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResShoot"));
+	if (IsValid(ShootMontage) == false)
+		return;
+
+	PlayAnimMontage(ShootMontage);
 }
 
 void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
@@ -148,6 +171,9 @@ void AShootingGameCodeCharacter::SetupPlayerInputComponent(class UInputComponent
 
 		//Reload
 		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Reload);
+
+		//Shoot
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Shoot);
 	}
 
 }
@@ -198,6 +224,12 @@ void AShootingGameCodeCharacter::Reload(const FInputActionValue& Value)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Reload"));
 	ReqReload();
+}
+
+void AShootingGameCodeCharacter::Shoot(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Shoot"));
+	ReqShoot();
 }
 
 

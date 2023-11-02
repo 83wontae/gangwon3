@@ -45,6 +45,10 @@ class AShootingGameCodeCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ReloadAction;
 
+	/** Shoot Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ShootAction;
+
 public:
 	AShootingGameCodeCharacter();
 	
@@ -62,6 +66,9 @@ protected:
 
 	/** Called for Test input */
 	void Reload(const FInputActionValue& Value);
+
+	/** Called for Test input */
+	void Shoot(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
@@ -101,6 +108,19 @@ public:
 	// NetMulticast : 모두에서 실행
 	UFUNCTION(NetMulticast, Reliable)
 	void ResReload();
+
+	// Server : 서버에서 실행
+	// Reliable : 신뢰성
+	UFUNCTION(Server, Reliable)
+	void ReqShoot();
+
+	// NetMulticast : 모두에서 실행
+	UFUNCTION(NetMulticast, Reliable)
+	void ResShoot();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
