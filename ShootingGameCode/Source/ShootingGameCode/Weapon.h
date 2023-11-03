@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WeaponInterface.h"
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
 UCLASS()
-class SHOOTINGGAMECODE_API AWeapon : public AActor
+class SHOOTINGGAMECODE_API AWeapon : public AActor, public IWeaponInterface
 {
 	GENERATED_BODY()
 	
@@ -24,6 +25,30 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventTrigger();
+
+	virtual void EventTrigger_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventShoot();
+
+	virtual void EventShoot_Implementation() override;
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* WeaponMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ShootMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ReloadMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UParticleSystem* FireEffect;
+
+	UPROPERTY(Replicated, BlueprintReadWrite)
+	ACharacter* m_pChar;
+
 };

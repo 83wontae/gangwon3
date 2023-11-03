@@ -123,16 +123,13 @@ public:
 	void TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UAnimMontage* ShootMontage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UAnimMontage* ReloadMontage;
-
 	UPROPERTY(Replicated)
 	FRotator m_LookAtRotation;
 
 	UFUNCTION(BlueprintPure)
 	FRotator GetLookAtRotation() { return m_LookAtRotation; };
+
+	UPROPERTY(Replicated, BlueprintReadWrite)
+	AActor* m_pEquipWeapon;
 };
 

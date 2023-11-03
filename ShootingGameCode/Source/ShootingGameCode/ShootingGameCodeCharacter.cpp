@@ -59,6 +59,7 @@ void AShootingGameCodeCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AShootingGameCodeCharacter, m_LookAtRotation);
+	DOREPLIFETIME(AShootingGameCodeCharacter, m_pEquipWeapon);
 }
 
 void AShootingGameCodeCharacter::BeginPlay()
@@ -90,7 +91,9 @@ void AShootingGameCodeCharacter::Tick(float DeltaTime)
 void AShootingGameCodeCharacter::TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass)
 {
 	AWeapon* pWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FVector(0, 0, 0), FRotator(0, 0, 0));
+	m_pEquipWeapon = pWeapon;
 
+	pWeapon->m_pChar = this;
 	pWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("weapon"));
 }
 
@@ -103,10 +106,6 @@ void AShootingGameCodeCharacter::ReqReload_Implementation()
 void AShootingGameCodeCharacter::ResReload_Implementation()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResReload"));
-	if (IsValid(ReloadMontage) == false)
-		return;
-
-	PlayAnimMontage(ReloadMontage);
 }
 
 void AShootingGameCodeCharacter::ReqShoot_Implementation()
@@ -118,10 +117,13 @@ void AShootingGameCodeCharacter::ReqShoot_Implementation()
 void AShootingGameCodeCharacter::ResShoot_Implementation()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResShoot"));
-	if (IsValid(ShootMontage) == false)
+
+	IWeaponInterface* pInterface = Cast<IWeaponInterface>(m_pEquipWeapon);
+
+	if (pInterface == nullptr)
 		return;
 
-	PlayAnimMontage(ShootMontage);
+	pInterface->Execute_EventTrigger(m_pEquipWeapon);
 }
 
 void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
@@ -133,10 +135,6 @@ void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
 void AShootingGameCodeCharacter::ResTestMsg_Implementation()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsg"));
-	if (IsValid(ShootMontage) == false)
-		return;
-
-	PlayAnimMontage(ShootMontage);
 }
 
 void AShootingGameCodeCharacter::ResTestMsgToOwner_Implementation()
