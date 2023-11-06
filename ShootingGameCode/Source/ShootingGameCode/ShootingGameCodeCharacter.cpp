@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
 #include "Weapon.h"
+#include "ShootingPlayerState.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,6 +89,25 @@ void AShootingGameCodeCharacter::Tick(float DeltaTime)
 	}
 }
 
+float AShootingGameCodeCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, 
+		FString::Printf(
+			TEXT("TakeDamage DamageAmount=%f EventInstigator=%s DamageCauser=%s"), 
+			DamageAmount,
+			*EventInstigator->GetName(),
+			*DamageCauser->GetName()
+		));
+
+	AShootingPlayerState* pPS = Cast<AShootingPlayerState>(GetPlayerState());
+	if (IsValid(pPS) == false)
+		return 0.0f;
+
+	pPS->AddDamage(10.0f);
+
+	return 0.0f;
+}
+
 void AShootingGameCodeCharacter::TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass)
 {
 	AWeapon* pWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FVector(0, 0, 0), FRotator(0, 0, 0));
@@ -95,28 +115,42 @@ void AShootingGameCodeCharacter::TestWeaponSpawn(TSubclassOf<class AWeapon> Weap
 
 	pWeapon->m_pChar = this;
 	pWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("weapon"));
+
+	UpdateBindTestWeapon();
+}
+
+void AShootingGameCodeCharacter::UpdateBindTestWeapon()
+{
+	if (IsValid(GetController()) == false)
+	{
+		FTimerManager& timerManager = GetWorld()->GetTimerManager();
+		timerManager.SetTimer(th_BindTestWeapon, this, &AShootingGameCodeCharacter::UpdateBindTestWeapon, 0.01f, false);
+		return;
+	}
+
+	m_pEquipWeapon->SetOwner(GetController());
 }
 
 void AShootingGameCodeCharacter::ReqReload_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqReload"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqReload"));
 	ResReload();
 }
 
 void AShootingGameCodeCharacter::ResReload_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResReload"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResReload"));
 }
 
 void AShootingGameCodeCharacter::ReqShoot_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqShoot"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqShoot"));
 	ResShoot();
 }
 
 void AShootingGameCodeCharacter::ResShoot_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResShoot"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResShoot"));
 
 	IWeaponInterface* pInterface = Cast<IWeaponInterface>(m_pEquipWeapon);
 
@@ -128,18 +162,18 @@ void AShootingGameCodeCharacter::ResShoot_Implementation()
 
 void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqTestMsg"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqTestMsg"));
 	ResTestMsg();
 }
 
 void AShootingGameCodeCharacter::ResTestMsg_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsg"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsg"));
 }
 
 void AShootingGameCodeCharacter::ResTestMsgToOwner_Implementation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsgToOwner"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResTestMsgToOwner"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,19 +248,19 @@ void AShootingGameCodeCharacter::Look(const FInputActionValue& Value)
 
 void AShootingGameCodeCharacter::Test(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Test"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Test"));
 	ReqTestMsg();
 }
 
 void AShootingGameCodeCharacter::Reload(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Reload"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Reload"));
 	ReqReload();
 }
 
 void AShootingGameCodeCharacter::Shoot(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Shoot"));
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Shoot"));
 	ReqShoot();
 }
 

@@ -36,6 +36,15 @@ public:
 	virtual void EventShoot_Implementation() override;
 
 public:
+	// Server : 서버에서 실행
+	// Reliable : 신뢰성
+	UFUNCTION(Server, Reliable)
+	void ReqApplyDamage(FVector vStart, FVector vEnd);
+
+public:
+	void CalcShootStartEndPos(FVector& vStart, FVector& vEnd);
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* WeaponMesh;
 

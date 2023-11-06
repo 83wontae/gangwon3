@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -60,5 +61,62 @@ void AWeapon::EventShoot_Implementation()
 		WeaponMesh->GetSocketLocation("muzzle"),
 		WeaponMesh->GetSocketRotation("muzzle"),
 		FVector(0.2f, 0.2f, 0.2f));
+
+	ACharacter* pPlayer0 = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (pPlayer0 != m_pChar)
+		return;
+
+	FVector vStart;
+	FVector vEnd;
+	CalcShootStartEndPos(vStart, vEnd);
+	// 여기 아래 부터는 vStart, vEnd 값이 계산되서 들어가 있다.
+
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("(Client)ReqApplyDamage"));
+	ReqApplyDamage(vStart, vEnd);
+}
+
+void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
+{
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("(Server)ReqApplyDamage"));
+
+	FCollisionObjectQueryParams collisionObjs;
+	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
+	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
+	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_Vehicle);
+	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_Destructible);
+
+	FCollisionQueryParams collisionQuery; // 컬리전 채크 추가 옵션
+	collisionQuery.AddIgnoredActor(m_pChar); // 히트 채크시 무시할 액터 추가 
+
+	FHitResult result;
+	bool itHit = GetWorld()->LineTraceSingleByObjectType(result, vStart, vEnd, collisionObjs, collisionQuery);
+	DrawDebugLine(GetWorld(), vStart, vEnd, FColor::Red, false, 5.0f);
+	if (itHit == false)
+		return;
+
+	ACharacter* pHitChar = Cast<ACharacter>(result.GetActor());
+	if (pHitChar == nullptr)// pHitChar가 nullptr 이라는 건 result.GetActor()가 캐릭터가 아니다.
+		return;
+
+	UGameplayStatics::ApplyDamage(pHitChar, 10.0f, m_pChar->GetController(), this, UDamageType::StaticClass());
+}
+
+void AWeapon::CalcShootStartEndPos(FVector& vStart, FVector& vEnd)
+{
+	if (IsValid(m_pChar) == false)
+		return;
+
+	USpringArmComponent* pArm = Cast<USpringArmComponent>(m_pChar->GetComponentByClass(USpringArmComponent::StaticClass()));
+	if (IsValid(pArm) == false)
+		return;
+
+	APlayerController* pPlayer = GetWorld()->GetFirstPlayerController();// Player index 0번
+	FVector vCameraLoc = pPlayer->PlayerCameraManager->GetCameraLocation();
+	FVector vCameraForward = pPlayer->PlayerCameraManager->GetActorForwardVector();
+
+	vStart = (vCameraForward * (pArm->TargetArmLength + 100)) + vCameraLoc;
+	vEnd = (vCameraForward * 10000) + vCameraLoc;
 }
 
