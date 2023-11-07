@@ -6,9 +6,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
 #include "GameFramework/SpringArmComponent.h"
+#include "ShootingHUD.h"
 
 // Sets default values
-AWeapon::AWeapon()
+AWeapon::AWeapon():Ammo(30)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,6 +29,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AWeapon, m_pChar);
+	DOREPLIFETIME(AWeapon, Ammo);
 }
 
 // Called when the game starts or when spawned
@@ -78,6 +80,7 @@ void AWeapon::EventShoot_Implementation()
 void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("(Server)ReqApplyDamage"));
+	UseAmmo();
 
 	FCollisionObjectQueryParams collisionObjs;
 	collisionObjs.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
@@ -103,6 +106,19 @@ void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
 	UGameplayStatics::ApplyDamage(pHitChar, 10.0f, m_pChar->GetController(), this, UDamageType::StaticClass());
 }
 
+void AWeapon::OnRep_Ammo()
+{
+	APlayerController* pPlayer = GetWorld()->GetFirstPlayerController();
+	if (IsValid(pPlayer) == false)
+		return;
+
+	AShootingHUD* pHud = Cast<AShootingHUD>(pPlayer->GetHUD());
+	if (IsValid(pHud) == false)
+		return;
+
+	pHud->OnUpdateMyAmmo(Ammo);
+}
+
 void AWeapon::CalcShootStartEndPos(FVector& vStart, FVector& vEnd)
 {
 	if (IsValid(m_pChar) == false)
@@ -118,5 +134,12 @@ void AWeapon::CalcShootStartEndPos(FVector& vStart, FVector& vEnd)
 
 	vStart = (vCameraForward * (pArm->TargetArmLength + 100)) + vCameraLoc;
 	vEnd = (vCameraForward * 10000) + vCameraLoc;
+}
+
+void AWeapon::UseAmmo()
+{
+	Ammo -= 1;
+	Ammo = FMath::Clamp(Ammo, 0, 30);
+	OnRep_Ammo();
 }
 

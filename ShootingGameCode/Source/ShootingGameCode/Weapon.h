@@ -41,8 +41,13 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ReqApplyDamage(FVector vStart, FVector vEnd);
 
+	UFUNCTION()
+	void OnRep_Ammo();
+
 public:
 	void CalcShootStartEndPos(FVector& vStart, FVector& vEnd);
+
+	void UseAmmo();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -60,4 +65,6 @@ public:
 	UPROPERTY(Replicated, BlueprintReadWrite)
 	ACharacter* m_pChar;
 
+	UPROPERTY(ReplicatedUsing = OnRep_Ammo)
+	int Ammo;
 };
