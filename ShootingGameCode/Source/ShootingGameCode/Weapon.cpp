@@ -9,7 +9,7 @@
 #include "ShootingHUD.h"
 
 // Sets default values
-AWeapon::AWeapon():Ammo(30)
+AWeapon::AWeapon():m_Ammo(30)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -29,7 +29,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AWeapon, m_pChar);
-	DOREPLIFETIME(AWeapon, Ammo);
+	DOREPLIFETIME(AWeapon, m_Ammo);
 }
 
 // Called when the game starts or when spawned
@@ -77,6 +77,28 @@ void AWeapon::EventShoot_Implementation()
 	ReqApplyDamage(vStart, vEnd);
 }
 
+void AWeapon::EventPickup_Implementation(ACharacter* pChar)
+{
+	// AttachToActor;
+	// AttachToComponent;
+	m_pChar = pChar;
+	WeaponMesh->SetSimulatePhysics(false);
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttachToComponent(pChar->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("weapon"));
+
+	UpdateHUD_MyAmmo(m_Ammo);
+}
+
+void AWeapon::EventDrop_Implementation(ACharacter* pChar)
+{
+	UpdateHUD_MyAmmo(0);
+	m_pChar = nullptr;
+	WeaponMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	WeaponMesh->SetSimulatePhysics(true);
+	SetOwner(nullptr);
+}
+
 void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("(Server)ReqApplyDamage"));
@@ -108,15 +130,7 @@ void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
 
 void AWeapon::OnRep_Ammo()
 {
-	APlayerController* pPlayer = GetWorld()->GetFirstPlayerController();
-	if (IsValid(pPlayer) == false)
-		return;
-
-	AShootingHUD* pHud = Cast<AShootingHUD>(pPlayer->GetHUD());
-	if (IsValid(pHud) == false)
-		return;
-
-	pHud->OnUpdateMyAmmo(Ammo);
+	UpdateHUD_MyAmmo(m_Ammo);
 }
 
 void AWeapon::CalcShootStartEndPos(FVector& vStart, FVector& vEnd)
@@ -138,8 +152,28 @@ void AWeapon::CalcShootStartEndPos(FVector& vStart, FVector& vEnd)
 
 void AWeapon::UseAmmo()
 {
-	Ammo -= 1;
-	Ammo = FMath::Clamp(Ammo, 0, 30);
+	m_Ammo -= 1;
+	m_Ammo = FMath::Clamp(m_Ammo, 0, 30);
 	OnRep_Ammo();
+}
+
+void AWeapon::UpdateHUD_MyAmmo(int Ammo)
+{
+	if (IsValid(m_pChar) == false)
+		return;
+
+	APlayerController* pPlayer0 = GetWorld()->GetFirstPlayerController();
+	if (IsValid(pPlayer0) == false)
+		return;
+
+	AController* pOwner = m_pChar->GetController();
+	if (pPlayer0 != pOwner)
+		return;
+
+	AShootingHUD* pHud = Cast<AShootingHUD>(pPlayer0->GetHUD());
+	if (IsValid(pHud) == false)
+		return;
+
+	pHud->OnUpdateMyAmmo(Ammo);
 }
 

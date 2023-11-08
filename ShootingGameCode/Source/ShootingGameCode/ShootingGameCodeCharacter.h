@@ -49,6 +49,10 @@ class AShootingGameCodeCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ShootAction;
 
+	/** PressF Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* PressFAction;
+
 public:
 	AShootingGameCodeCharacter();
 	
@@ -64,11 +68,14 @@ protected:
 	/** Called for Test input */
 	void Test(const FInputActionValue& Value);
 
-	/** Called for Test input */
+	/** Called for Reload input */
 	void Reload(const FInputActionValue& Value);
 
-	/** Called for Test input */
+	/** Called for Shoot input */
 	void Shoot(const FInputActionValue& Value);
+
+	/** Called for PressF input */
+	void PressF(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
@@ -129,11 +136,26 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResShoot();
 
+	// Server : 서버에서 실행
+	// Reliable : 신뢰성
+	UFUNCTION(Server, Reliable)
+	void ReqPressF();
+
+	// NetMulticast : 모두에서 실행
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressF(AActor* EquipActor);
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass);
 
 	void UpdateBindTestWeapon();
+
+	AActor* GetNearestActor();
+
+	void EventEquip(AActor* pActor);
+
+	void EventUnEquip();
 
 public:
 	UPROPERTY(Replicated)

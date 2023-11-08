@@ -35,6 +35,16 @@ public:
 
 	virtual void EventShoot_Implementation() override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventPickup(ACharacter* pChar);
+
+	virtual void EventPickup_Implementation(ACharacter* pChar) override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventDrop(ACharacter* pChar);
+
+	virtual void EventDrop_Implementation(ACharacter* pChar) override;
+
 public:
 	// Server : 서버에서 실행
 	// Reliable : 신뢰성
@@ -48,6 +58,8 @@ public:
 	void CalcShootStartEndPos(FVector& vStart, FVector& vEnd);
 
 	void UseAmmo();
+
+	void UpdateHUD_MyAmmo(int Ammo);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -66,5 +78,5 @@ public:
 	ACharacter* m_pChar;
 
 	UPROPERTY(ReplicatedUsing = OnRep_Ammo)
-	int Ammo;
+	int m_Ammo;
 };

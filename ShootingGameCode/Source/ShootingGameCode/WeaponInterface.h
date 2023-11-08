@@ -25,4 +25,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void EventShoot();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventPickup(ACharacter* pChar);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventDrop(ACharacter* pChar);
 };

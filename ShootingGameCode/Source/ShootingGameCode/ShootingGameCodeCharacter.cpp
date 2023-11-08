@@ -131,6 +131,53 @@ void AShootingGameCodeCharacter::UpdateBindTestWeapon()
 	m_pEquipWeapon->SetOwner(GetController());
 }
 
+AActor* AShootingGameCodeCharacter::GetNearestActor()
+{
+	TArray<AActor*> actors;
+	GetCapsuleComponent()->GetOverlappingActors(actors, AWeapon::StaticClass());
+
+	double nearestLength = 9999999.0;
+	AActor* nearestActor = nullptr;
+
+	for (AActor* target : actors)
+	{
+		double distance = FVector::Dist(target->GetActorLocation(), GetActorLocation());
+		if (nearestLength < distance)
+			continue;
+
+		nearestLength = distance;
+		nearestActor = target;
+	}
+
+	return nearestActor;
+}
+
+void AShootingGameCodeCharacter::EventEquip(AActor* pActor)
+{
+	bUseControllerRotationYaw = true;
+	m_pEquipWeapon = pActor;
+
+	IWeaponInterface* pInterface = Cast<IWeaponInterface>(m_pEquipWeapon);
+
+	if (pInterface == nullptr)
+		return;
+
+	pInterface->Execute_EventPickup(m_pEquipWeapon, this);
+}
+
+void AShootingGameCodeCharacter::EventUnEquip()
+{
+	bUseControllerRotationYaw = false;
+
+	IWeaponInterface* pInterface = Cast<IWeaponInterface>(m_pEquipWeapon);
+	if (pInterface == nullptr)
+		return;
+
+	pInterface->Execute_EventDrop(m_pEquipWeapon, this);
+
+	m_pEquipWeapon = nullptr;
+}
+
 void AShootingGameCodeCharacter::ReqReload_Implementation()
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqReload"));
@@ -158,6 +205,32 @@ void AShootingGameCodeCharacter::ResShoot_Implementation()
 		return;
 
 	pInterface->Execute_EventTrigger(m_pEquipWeapon);
+}
+
+void AShootingGameCodeCharacter::ReqPressF_Implementation()
+{
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqShoot"));
+
+	AActor* pActor = GetNearestActor();
+
+	if (IsValid(pActor) == false)
+		return;
+
+	pActor->SetOwner(GetController());
+
+	ResPressF(pActor);
+}
+
+void AShootingGameCodeCharacter::ResPressF_Implementation(AActor* EquipActor)
+{
+	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResShoot"));
+
+	if (IsValid(m_pEquipWeapon))
+	{
+		EventUnEquip();
+	}
+
+	EventEquip(EquipActor);
 }
 
 void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
@@ -206,6 +279,9 @@ void AShootingGameCodeCharacter::SetupPlayerInputComponent(class UInputComponent
 
 		//Shoot
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Shoot);
+
+		//PressF
+		EnhancedInputComponent->BindAction(PressFAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::PressF);
 	}
 
 }
@@ -262,6 +338,11 @@ void AShootingGameCodeCharacter::Shoot(const FInputActionValue& Value)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Shoot"));
 	ReqShoot();
+}
+
+void AShootingGameCodeCharacter::PressF(const FInputActionValue& Value)
+{
+	ReqPressF();
 }
 
 
