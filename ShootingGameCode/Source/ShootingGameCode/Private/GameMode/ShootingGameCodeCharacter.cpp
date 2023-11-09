@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShootingGameCodeCharacter.h"
+#include "GameMode/ShootingGameCodeCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -11,7 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
 #include "Weapon.h"
-#include "ShootingPlayerState.h"
+#include "GameMode/ShootingPlayerState.h"
 
 
 //////////////////////////////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 
 
 #include "AnimNotify_Shoot.h"
-#include "ShootingGameCodeCharacter.h"
+#include "Public/GameMode/ShootingGameCodeCharacter.h"
 #include "WeaponInterface.h"
 
 void UAnimNotify_Shoot::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)

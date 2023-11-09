@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ShootingPlayerState.h"
+#include "GameMode/ShootingPlayerState.h"
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
 
 AShootingPlayerState::AShootingPlayerState():m_CurHp(100)

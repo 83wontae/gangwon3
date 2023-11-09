@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemInteraction.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "ShootingGameCodeCharacter.generated.h"
 
 
 UCLASS(config=Game)
-class AShootingGameCodeCharacter : public ACharacter
+class AShootingGameCodeCharacter : public ACharacter, public IItemInteraction
 {
 	GENERATED_BODY()
 

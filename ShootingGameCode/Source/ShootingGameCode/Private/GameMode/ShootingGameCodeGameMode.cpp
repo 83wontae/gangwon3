@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShootingGameCodeGameMode.h"
-#include "ShootingGameCodeCharacter.h"
+#include "GameMode/ShootingGameCodeGameMode.h"
+#include "GameMode/ShootingGameCodeCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShootingGameCodeGameMode::AShootingGameCodeGameMode()
