@@ -77,7 +77,10 @@ protected:
 	void Reload(const FInputActionValue& Value);
 
 	/** Called for Shoot input */
-	void Shoot(const FInputActionValue& Value);
+	void ShootPress(const FInputActionValue& Value);
+
+	/** Called for Shoot input */
+	void ShootRelease(const FInputActionValue& Value);
 
 	/** Called for PressF input */
 	void PressF(const FInputActionValue& Value);
@@ -138,11 +141,11 @@ public:
 	// Server : 서버에서 실행
 	// Reliable : 신뢰성
 	UFUNCTION(Server, Reliable)
-	void ReqShoot();
+	void ReqShoot(bool isPress);
 
 	// NetMulticast : 모두에서 실행
 	UFUNCTION(NetMulticast, Reliable)
-	void ResShoot();
+	void ResShoot(bool isPress);
 
 	// Server : 서버에서 실행
 	// Reliable : 신뢰성

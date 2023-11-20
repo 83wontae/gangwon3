@@ -213,13 +213,13 @@ void AShootingGameCodeCharacter::ResReload_Implementation()
 	pInterface->Execute_EventReload(m_pEquipWeapon);
 }
 
-void AShootingGameCodeCharacter::ReqShoot_Implementation()
+void AShootingGameCodeCharacter::ReqShoot_Implementation(bool isPress)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqShoot"));
-	ResShoot();
+	ResShoot(isPress);
 }
 
-void AShootingGameCodeCharacter::ResShoot_Implementation()
+void AShootingGameCodeCharacter::ResShoot_Implementation(bool isPress)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResShoot"));
 
@@ -228,7 +228,7 @@ void AShootingGameCodeCharacter::ResShoot_Implementation()
 	if (pInterface == nullptr)
 		return;
 
-	pInterface->Execute_EventTrigger(m_pEquipWeapon);
+	pInterface->Execute_EventTrigger(m_pEquipWeapon, isPress);
 }
 
 void AShootingGameCodeCharacter::ReqPressF_Implementation()
@@ -312,8 +312,11 @@ void AShootingGameCodeCharacter::SetupPlayerInputComponent(class UInputComponent
 		//Reload
 		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Reload);
 
-		//Shoot
-		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::Shoot);
+		//ShootPress
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::ShootPress);
+
+		//ShootRelease
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &AShootingGameCodeCharacter::ShootRelease);
 
 		//PressF
 		EnhancedInputComponent->BindAction(PressFAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::PressF);
@@ -372,10 +375,15 @@ void AShootingGameCodeCharacter::Reload(const FInputActionValue& Value)
 	ReqReload();
 }
 
-void AShootingGameCodeCharacter::Shoot(const FInputActionValue& Value)
+void AShootingGameCodeCharacter::ShootPress(const FInputActionValue& Value)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Shoot"));
-	ReqShoot();
+	ReqShoot(true);
+}
+
+void AShootingGameCodeCharacter::ShootRelease(const FInputActionValue& Value)
+{
+	ReqShoot(false);
 }
 
 void AShootingGameCodeCharacter::PressF(const FInputActionValue& Value)
