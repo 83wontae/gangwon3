@@ -228,6 +228,9 @@ void AShootingGameCodeCharacter::ResShoot_Implementation(bool isPress)
 	if (pInterface == nullptr)
 		return;
 
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green,
+		FString::Printf(TEXT("ResShoot_Implementation isPress=%d"), isPress));
+
 	pInterface->Execute_EventTrigger(m_pEquipWeapon, isPress);
 }
 
@@ -377,12 +380,13 @@ void AShootingGameCodeCharacter::Reload(const FInputActionValue& Value)
 
 void AShootingGameCodeCharacter::ShootPress(const FInputActionValue& Value)
 {
-	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("Shoot"));
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ShootPress"));
 	ReqShoot(true);
 }
 
 void AShootingGameCodeCharacter::ShootRelease(const FInputActionValue& Value)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ShootRelease"));
 	ReqShoot(false);
 }
 

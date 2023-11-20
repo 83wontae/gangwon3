@@ -15,6 +15,11 @@ class SHOOTINGGAMECODE_API AWeapon_MachineGun : public AWeapon
 	GENERATED_BODY()
 	
 public:
-
 	virtual void EventTrigger_Implementation(bool IsPress) override;
+
+	UFUNCTION()
+	void LoopShooting();
+
+public:
+	FTimerHandle th_LoopShooting;
 };

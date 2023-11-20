@@ -76,6 +76,8 @@ public:
 
 	void UpdateHUD_MyAmmo(int Ammo);
 
+	bool IsCanShoot();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* WeaponMesh;

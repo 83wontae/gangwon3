@@ -49,7 +49,16 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::EventTrigger_Implementation(bool IsPress)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green,
+		FString::Printf( TEXT("EventTrigger_Implementation IsPressr=%d"), IsPress));
+
 	if (IsValid(ShootMontage) == false)
+		return;
+
+	if (IsPress == false)
+		return;
+
+	if (IsCanShoot() == false)
 		return;
 
 	m_pChar->PlayAnimMontage(ShootMontage);
@@ -211,5 +220,13 @@ void AWeapon::UpdateHUD_MyAmmo(int Ammo)
 		return;
 
 	pHud->OnUpdateMyAmmo(Ammo);
+}
+
+bool AWeapon::IsCanShoot()
+{
+	if (m_Ammo <= 0)
+		return false;
+
+	return true;
 }
 
