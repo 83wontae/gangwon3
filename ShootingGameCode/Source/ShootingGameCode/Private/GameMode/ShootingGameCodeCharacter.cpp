@@ -191,6 +191,14 @@ void AShootingGameCodeCharacter::EventUnEquip()
 void AShootingGameCodeCharacter::ReqReload_Implementation()
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqReload"));
+	AShootingPlayerState* pPS = Cast<AShootingPlayerState>(GetPlayerState());
+
+	if (IsValid(pPS) == false)
+		return;
+
+	if (pPS->IsCanReload() == false)
+		return;
+
 	ResReload();
 }
 

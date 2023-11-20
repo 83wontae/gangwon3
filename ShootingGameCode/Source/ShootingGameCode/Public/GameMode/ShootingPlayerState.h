@@ -37,6 +37,9 @@ public:
 	void OnRep_Mag();
 
 public:
+	bool IsCanReload();
+
+public:
 	UPROPERTY(ReplicatedUsing=OnRep_CurHp)
 	float m_CurHp;
 

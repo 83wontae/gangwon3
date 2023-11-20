@@ -110,12 +110,18 @@ void AWeapon::EventReload_Implementation()
 
 void AWeapon::EventReload_Complate_Implementation()
 {
-	AShootingPlayerState* pPS =	Cast<AShootingPlayerState>(m_pChar->GetPlayerState());
-
-	if (IsValid(pPS) == false)
+	if (IsValid(m_pChar) == false)
 		return;
 
-	pPS->UseMag();
+	APlayerController* pPlayer0 = GetWorld()->GetFirstPlayerController();
+	if (IsValid(pPlayer0) == false)
+		return;
+
+	AController* pOwner = m_pChar->GetController();
+	if (pPlayer0 != pOwner)
+		return;
+
+	ReqReload();
 }
 
 
@@ -146,6 +152,16 @@ void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
 		return;
 
 	UGameplayStatics::ApplyDamage(pHitChar, 10.0f, m_pChar->GetController(), this, UDamageType::StaticClass());
+}
+
+void AWeapon::ReqReload_Implementation()
+{
+	AShootingPlayerState* pPS = Cast<AShootingPlayerState>(m_pChar->GetPlayerState());
+
+	if (IsValid(pPS) == false)
+		return;
+
+	pPS->UseMag();
 }
 
 void AWeapon::OnRep_Ammo()

@@ -20,6 +20,7 @@ void AShootingPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 void AShootingPlayerState::AddDamage(float Damage)
 {
 	m_CurHp = m_CurHp - Damage;
+	m_CurHp = FMath::Clamp(m_CurHp, 0, 100);
 	OnRep_CurHp();
 }
 
@@ -31,6 +32,9 @@ void AShootingPlayerState::AddMag()
 
 void AShootingPlayerState::UseMag()
 {
+	if (IsCanReload() == false)
+		return;
+
 	m_Mag = m_Mag - 1;
 	OnRep_Mag();
 }
@@ -51,4 +55,12 @@ void AShootingPlayerState::OnRep_Mag()
 
 	if (Event_Dele_UpdateMag.IsBound())
 		Event_Dele_UpdateMag.Broadcast(m_Mag);
+}
+
+bool AShootingPlayerState::IsCanReload()
+{
+	if (m_Mag <= 0)
+		return false;
+
+	return true;
 }
