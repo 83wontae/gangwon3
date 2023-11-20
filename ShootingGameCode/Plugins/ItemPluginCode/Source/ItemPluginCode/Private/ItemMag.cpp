@@ -41,6 +41,8 @@ void AItemMag::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	if (pInterface == nullptr)
 		return;
 
+	pInterface->Execute_BeginOverlapItemMag(OtherActor);
+
 	Destroy();
 }
 

@@ -54,6 +54,10 @@ class AShootingGameCodeCharacter : public ACharacter, public IItemInteraction
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* PressFAction;
 
+	/** PressR Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* PressRAction;
+
 public:
 	AShootingGameCodeCharacter();
 	
@@ -77,6 +81,9 @@ protected:
 
 	/** Called for PressF input */
 	void PressF(const FInputActionValue& Value);
+
+	/** Called for PressF input */
+	void PressR(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
@@ -145,6 +152,21 @@ public:
 	// NetMulticast : 모두에서 실행
 	UFUNCTION(NetMulticast, Reliable)
 	void ResPressF(AActor* EquipActor);
+
+	// Server : 서버에서 실행
+	// Reliable : 신뢰성
+	UFUNCTION(Server, Reliable)
+	void ReqPressR();
+
+	// NetMulticast : 모두에서 실행
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPressR();
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void BeginOverlapItemMag();
+
+	virtual void BeginOverlapItemMag_Implementation() override;
 
 public:
 	UFUNCTION(BlueprintCallable)

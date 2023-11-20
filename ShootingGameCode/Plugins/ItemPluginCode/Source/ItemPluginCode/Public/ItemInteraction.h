@@ -18,4 +18,8 @@ class UItemInteraction : public UInterface
 class ITEMPLUGINCODE_API IItemInteraction
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void BeginOverlapItemMag();
 };

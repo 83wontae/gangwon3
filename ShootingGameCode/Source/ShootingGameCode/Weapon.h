@@ -45,6 +45,16 @@ public:
 
 	virtual void EventDrop_Implementation(ACharacter* pChar) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventReload();
+
+	virtual void EventReload_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventReload_Complate();
+
+	virtual void EventReload_Complate_Implementation() override;
+
 public:
 	// Server : 서버에서 실행
 	// Reliable : 신뢰성

@@ -31,4 +31,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void EventDrop(ACharacter* pChar);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventReload();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventReload_Complate();
 };

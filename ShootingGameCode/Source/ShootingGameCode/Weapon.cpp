@@ -7,6 +7,7 @@
 #include "Net/UnrealNetwork.h"// Replicated 처리에서 DOREPLIFETIME 기능을 가지고 있는 라이브러리
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/ShootingHUD.h"
+#include "GameMode/ShootingPlayerState.h"
 
 // Sets default values
 AWeapon::AWeapon():m_Ammo(30)
@@ -98,6 +99,25 @@ void AWeapon::EventDrop_Implementation(ACharacter* pChar)
 	WeaponMesh->SetSimulatePhysics(true);
 	SetOwner(nullptr);
 }
+
+void AWeapon::EventReload_Implementation()
+{
+	if (IsValid(ReloadMontage) == false)
+		return;
+
+	m_pChar->PlayAnimMontage(ReloadMontage);
+}
+
+void AWeapon::EventReload_Complate_Implementation()
+{
+	AShootingPlayerState* pPS =	Cast<AShootingPlayerState>(m_pChar->GetPlayerState());
+
+	if (IsValid(pPS) == false)
+		return;
+
+	pPS->UseMag();
+}
+
 
 void AWeapon::ReqApplyDamage_Implementation(FVector vStart, FVector vEnd)
 {

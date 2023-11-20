@@ -33,6 +33,12 @@ public:
 
 	void OnUpdateMyAmmo_Implementation(int Ammo);
 
+	// BlueprintNativeEvent : 블루프린트에서 이벤트 형태로 생성
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnUpdateMyMag(int Mag);
+
+	void OnUpdateMyMag_Implementation(int Mag);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UUserWidget> HudWidgetClass;

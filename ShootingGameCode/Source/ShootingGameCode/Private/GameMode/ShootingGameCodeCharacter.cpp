@@ -108,6 +108,16 @@ float AShootingGameCodeCharacter::TakeDamage(float DamageAmount, FDamageEvent co
 	return 0.0f;
 }
 
+void AShootingGameCodeCharacter::BeginOverlapItemMag_Implementation()
+{
+	AShootingPlayerState* pPS = Cast<AShootingPlayerState>(GetPlayerState());
+
+	if (IsValid(pPS) == false)
+		return;
+
+	pPS->AddMag();
+}
+
 void AShootingGameCodeCharacter::TestWeaponSpawn(TSubclassOf<class AWeapon> WeaponClass)
 {
 	AWeapon* pWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FVector(0, 0, 0), FRotator(0, 0, 0));
@@ -187,6 +197,12 @@ void AShootingGameCodeCharacter::ReqReload_Implementation()
 void AShootingGameCodeCharacter::ResReload_Implementation()
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResReload"));
+	IWeaponInterface* pInterface = Cast<IWeaponInterface>(m_pEquipWeapon);
+
+	if (pInterface == nullptr)
+		return;
+
+	pInterface->Execute_EventReload(m_pEquipWeapon);
 }
 
 void AShootingGameCodeCharacter::ReqShoot_Implementation()
@@ -231,6 +247,17 @@ void AShootingGameCodeCharacter::ResPressF_Implementation(AActor* EquipActor)
 	}
 
 	EventEquip(EquipActor);
+}
+
+void AShootingGameCodeCharacter::ReqPressR_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ReqPressR"));
+	ResPressR();
+}
+
+void AShootingGameCodeCharacter::ResPressR_Implementation()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("ResPressR"));
 }
 
 void AShootingGameCodeCharacter::ReqTestMsg_Implementation()
@@ -282,6 +309,9 @@ void AShootingGameCodeCharacter::SetupPlayerInputComponent(class UInputComponent
 
 		//PressF
 		EnhancedInputComponent->BindAction(PressFAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::PressF);
+
+		//PressR
+		EnhancedInputComponent->BindAction(PressRAction, ETriggerEvent::Started, this, &AShootingGameCodeCharacter::PressR);
 	}
 
 }
@@ -343,6 +373,12 @@ void AShootingGameCodeCharacter::Shoot(const FInputActionValue& Value)
 void AShootingGameCodeCharacter::PressF(const FInputActionValue& Value)
 {
 	ReqPressF();
+}
+
+void AShootingGameCodeCharacter::PressR(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Green, TEXT("PressR"));
+	ReqPressR();
 }
 
 
